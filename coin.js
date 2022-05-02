@@ -1,7 +1,11 @@
 const puppeteer = require('puppeteer');
 
 const crawlConcurrentNumber = async () => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+            executablePath: '/usr/bin/chromium-browser',
+            args: ['--no-sandbox', '--disable-dev-shm-usage']
+        })
+    ;
     const page = await browser.newPage();
     await page.goto('https://whos.amung.us/stats/history/o8a6qaozg42x/');
 
