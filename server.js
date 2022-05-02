@@ -1,33 +1,19 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const schedule = require('node-schedule');
+const coin = require('./coin')
 const cors = require('cors');
-const puppeteer = require('puppeteer');
 
-const crawlConcurrentNumber = async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto('https://whos.amung.us/stats/history/o8a6qaozg42x/');
 
-    await page.waitForSelector('.hnavb a:last-of-type')
-    await page.click('.hnavb a:last-of-type')
-
-    await page.waitForSelector('#datatablecontainer .table tbody tr')
-
-    const data = await page.evaluate(() => {
-        return {
-            time: document.querySelector('#datatablecontainer .table tbody tr td:first-of-type').textContent,
-            count: document.querySelector('#datatablecontainer .table tbody tr td:last-of-type').textContent
-        }
-    })
-    await browser.close();
-    return data
-};
-
+let datas = []
 
 const http = require('http').createServer(app);
 http.listen(8080, function () {
-    console.log('listening on 8080')
+    console.log('http://localhost:8080')
+    schedule.scheduleJob('0,10,20,30,40,50 * * * * *', () => {
+        coin.crawlConcurrentNumber().then(data => datas = [data, ...datas])
+    })
 });
 
 app.use(cors());
@@ -42,6 +28,5 @@ app.get('/test', (req, res) => {
 })
 
 app.get('/coin', async (req, res) => {
-    const data = await crawlConcurrentNumber()
-    res.send(data)
+    res.send(datas)
 })

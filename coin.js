@@ -20,9 +20,5 @@ const crawlConcurrentNumber = async () => {
     return data
 };
 
-// setInterval(async () => {
-//     const data = await crawlConcurrentNumber()
-//     console.log(data)
-// }, 10000)
 
 module.exports = {crawlConcurrentNumber}
