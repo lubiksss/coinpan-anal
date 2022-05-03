@@ -14,14 +14,11 @@ const gauge = new client.Gauge({
 })
 register.registerMetric(gauge)
 
-let datas = []
-
 const http = require('http').createServer(app);
 http.listen(8080, function () {
     console.log('http://localhost:8080')
     schedule.scheduleJob('0,10,20,30,40,50 * * * * *', () => {
         coin.crawlConcurrentNumber().then(data => {
-            datas = [data, ...datas];
             const number = parseInt(data.count.replace(',', ''))
             gauge.set(number)
         })
@@ -35,12 +32,8 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'front/build/index.html'))
 })
 
-app.get('/test', (req, res) => {
-    res.send({test: 'test'})
-})
-
 app.get('/coin', (req, res) => {
-    res.send(datas)
+    res.send([{time: null, count: 777}])
 })
 
 app.get('/metrics', async (req, res) => {
