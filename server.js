@@ -14,6 +14,8 @@ const gauge = new client.Gauge({
 })
 register.registerMetric(gauge)
 
+let datas = []
+
 const http = require('http').createServer(app);
 http.listen(8080, function () {
     console.log('http://localhost:8080')
@@ -22,6 +24,7 @@ http.listen(8080, function () {
             const data = await coin.crawlConcurrentNumber()
             const number = parseInt(data.count.replace(',', ''))
             gauge.set(number)
+            datas = [data, ...datas.slice(0, 9)]
         } catch {
             const now = new Date()
             console.log(now.toString() + "crawlConcurrentNumber 에러, 데이터 긁기 실패")
@@ -37,7 +40,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/coin', (req, res) => {
-    res.send([{time: null, count: 777}])
+    res.send(datas)
 })
 
 app.get('/metrics', async (req, res) => {
