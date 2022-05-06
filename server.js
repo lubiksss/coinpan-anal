@@ -17,11 +17,10 @@ register.registerMetric(gauge)
 const http = require('http').createServer(app);
 http.listen(8080, function () {
     console.log('http://localhost:8080')
-    schedule.scheduleJob('0,10,20,30,40,50 * * * * *', () => {
-        coin.crawlConcurrentNumber().then(data => {
-            const number = parseInt(data.count.replace(',', ''))
-            gauge.set(number)
-        })
+    schedule.scheduleJob('0,10,20,30,40,50 * * * * *', async () => {
+        const data = await coin.crawlConcurrentNumber()
+        const number = parseInt(data.count.replace(',', ''))
+        gauge.set(number)
     })
 });
 
