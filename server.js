@@ -20,13 +20,14 @@ const http = require('http').createServer(app);
 http.listen(8080, function () {
     console.log('http://localhost:8080')
     schedule.scheduleJob('0,10,20,30,40,50 * * * * *', async () => {
+        const now = new Date()
         try {
             const data = await coin.crawlConcurrentNumber()
             const number = parseInt(data.count.replace(',', ''))
             gauge.set(number)
             datas = [data, ...datas.slice(0, 9)]
+            console.log(now.toString() + "데이터 긁기 성공")
         } catch {
-            const now = new Date()
             console.log(now.toString() + "crawlConcurrentNumber 에러, 데이터 긁기 실패")
         }
     })
