@@ -6,6 +6,9 @@ services:
     build: .
     ports:
       - 8080:8080
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
 
   prometheus:
     image: prom/prometheus
