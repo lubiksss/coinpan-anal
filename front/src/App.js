@@ -4,7 +4,7 @@ import axios from "axios";
 function App() {
     const [datas, setDatas] = useState([])
     const callApi = () => {
-        axios.get("http://localhost:8080/coin").then(res => setDatas(res.data))
+        axios.get("host.docker.internal:8080/coin").then(res => setDatas(res.data))
     }
     useEffect(() => {
         const interval = setInterval(() => {
