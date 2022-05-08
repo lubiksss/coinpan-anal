@@ -19,7 +19,7 @@ let datas = []
 const http = require('http').createServer(app);
 http.listen(8080, function () {
     console.log('http://localhost:8080')
-    schedule.scheduleJob('0,10,20,30,40,50 * * * * *', async () => {
+    schedule.scheduleJob('0,30 * * * * *', async () => {
         const now = new Date()
         try {
             const data = await coin.crawlConcurrentNumber()
